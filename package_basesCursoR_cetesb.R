@@ -9,6 +9,7 @@ library(dplyr)
 library(ggplot2)
 library(magrittr)
 library(tidyr)
+library(forcats)
 
 # Identificar bases disponíveis ------------------------------------------------------------------------------------------------------------
 
@@ -37,8 +38,8 @@ cetesb1$estacao_cetesb <- as.factor(cetesb1$estacao_cetesb)
 cetesb2 <- cetesb1 %>%
   group_by(estacao_cetesb) %>%
   summarise(media = mean(concentracao), sd = sd(concentracao),
-            n = n(), se = sd/sqrt(n)) 
+            n = n(), se = sd / sqrt(n)) 
 View(cetesb2)
 
-ggplot(cetesb1, aes(x = estacao_cetesb, y = concentracao)) +
-  geom_col()
+ggplot(cetesb2, aes(x = fct_reorder(estacao_cetesb, media), y = media)) +
+  geom_col() 
