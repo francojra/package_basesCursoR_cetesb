@@ -8,6 +8,7 @@ library(basesCursoR)
 library(dplyr)
 library(ggplot2)
 library(magrittr)
+library(tidyr)
 
 # Identificar bases disponíveis ------------------------------------------------------------------------------------------------------------
 
@@ -27,14 +28,15 @@ cetesb1 <- cetesb %>%
                        "Paque D.Pedro II")) %>%
   filter(poluente == "O3") 
 View(cetesb1)  
+glimpse(cetesb1)
+cetesb1$estacao_cetesb <- as.factor(cetesb1$estacao_cetesb)
 
 # Análises ---------------------------------------------------------------------------------------------------------------------------------
 
 cetesb2 <- cetesb1 %>%
-  group_by(estado, semanaEpi) %>%
-  summarise(media = mean(casosAcumulado))
+  group_by(estacao_cetesb) %>%
+  summarise(media = mean(concentracao)) %>%
+  drop_na()
 
-ggplot(covid2, aes(x = semanaEpi, y = media, 
-                   col = estado, group = estado)) +
-  geom_point() +
-  geom_line()
+ggplot(cetesb2, aes(x = estacao_cetesb, y = media)) +
+  geom_col()
